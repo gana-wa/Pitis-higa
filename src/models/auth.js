@@ -1,4 +1,4 @@
-const db = require('../config/dbMySql');
+const db = require('../config/dbConfig');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -23,7 +23,7 @@ const authModel = {
                         reject(err);
                      }
                      const newBody = { ...body, password: hashedPassword };
-                     const queryString = 'INSERT INTO tb_user SET ?';
+                     const queryString = 'INSERT INTO tb_user SET ?;INSERT INTO tb_user_detail SET user_id=LAST_INSERT_ID();INSERT INTO tb_balance SET user_id=LAST_INSERT_ID()';
                      db.query(queryString, newBody, (err, data) => {
                         if (err) {
                            reject(err);
