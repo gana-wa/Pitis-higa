@@ -1,0 +1,14 @@
+{
+  "name": "zwallet-api",
+  "version": "1.0.0",
+  "description": "API for Zwallet",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "gana-wa",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
