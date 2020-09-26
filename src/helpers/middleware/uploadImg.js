@@ -43,7 +43,7 @@ const uploadImg = {
                req.body.photo = `/images/${req.file.filename}`;
             }
             catch {
-               console.log(err);
+               // console.log(err);
             }
             finally {
                next();
