@@ -50,7 +50,7 @@ const authModel = {
    },
    loginUser: (body) => {
       return new Promise((resolve, reject) => {
-         const queryString = 'SELECT *, tb_balance.balance FROM tb_user JOIN tb_balance ON tb_user.user_id = tb_balance.user_id WHERE email=?;';
+         const queryString = 'SELECT *, tb_balance.balance, tb_user_detail.first_name, tb_user_detail.last_name, tb_user_detail.phone, tb_user_detail.photo FROM tb_user JOIN tb_balance ON tb_user.user_id = tb_balance.user_id JOIN tb_user_detail ON tb_user.user_id = tb_user_detail.user_id WHERE email=?;';
          db.query(queryString, body.email, (err, data) => {
             if (err) {
                reject(err);
@@ -58,15 +58,8 @@ const authModel = {
             if (data.length) {
                bcrypt.compare(body.password, data[0].password, (err, result) => {
                   if (result) {
-                     // const queryBalance = 'SELECT balance FROM tb_balance WHERE user_id=?;';
-                     // db.query(queryBalance, data[0].user_id, (err, balanceData) => {
-                     //    if (err) {
-                     //       reject(err);
-                     //       console.error(err);
-                     //    }
-                     // });
                      const { email } = body;
-                     const { id, username, balance } = data[0];
+                     const { user_id, username, balance, first_name, last_name, phone, photo } = data[0];
                      const payload = {
                         email,
                         // username,
@@ -79,11 +72,15 @@ const authModel = {
                      const msg = 'Login successfull';
                      resolve({
                         msg,
+                        user_id,
                         // email,
                         username,
-                        token,
-                        id,
                         balance,
+                        first_name,
+                        last_name,
+                        phone,
+                        photo,
+                        token,
                      });
                   }
                   if (!result) {
