@@ -50,7 +50,7 @@ const authModel = {
    },
    loginUser: (body) => {
       return new Promise((resolve, reject) => {
-         const queryString = 'SELECT * FROM tb_user WHERE email=?';
+         const queryString = 'SELECT *, tb_balance.balance FROM tb_user JOIN tb_balance ON tb_user.user_id = tb_balance.user_id WHERE email=?;';
          db.query(queryString, body.email, (err, data) => {
             if (err) {
                reject(err);
@@ -58,11 +58,18 @@ const authModel = {
             if (data.length) {
                bcrypt.compare(body.password, data[0].password, (err, result) => {
                   if (result) {
+                     // const queryBalance = 'SELECT balance FROM tb_balance WHERE user_id=?;';
+                     // db.query(queryBalance, data[0].user_id, (err, balanceData) => {
+                     //    if (err) {
+                     //       reject(err);
+                     //       console.error(err);
+                     //    }
+                     // });
                      const { email } = body;
-                     const { id, username } = data[0];
+                     const { id, username, balance } = data[0];
                      const payload = {
                         email,
-                        username,
+                        // username,
                      };
                      const token = jwt.sign(
                         payload,
@@ -70,7 +77,14 @@ const authModel = {
                         // { expiresIn: "6h" },
                      );
                      const msg = 'Login successfull';
-                     resolve({ msg, email, username, token, id });
+                     resolve({
+                        msg,
+                        // email,
+                        username,
+                        token,
+                        id,
+                        balance,
+                     });
                   }
                   if (!result) {
                      reject({ msg: 'Username or password is wrong!' });
