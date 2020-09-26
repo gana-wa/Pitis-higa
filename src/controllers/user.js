@@ -16,6 +16,16 @@ const userController = {
             formRespone.error(res, err);
          })
    },
+   selectAllUser: (req, res) => {
+      userModel
+         .selectAllUser(req.params.id)
+         .then((data) => {
+            formRespone.success(res, data);
+         })
+         .catch((err) => {
+            formRespone.error(res, err);
+         })
+   },
 };
 
 module.exports = userController;

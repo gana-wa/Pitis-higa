@@ -12,7 +12,20 @@ const userModel = {
             }
          });
       });
-   }
+   },
+   // select all user except current user
+   selectAllUser: (id) => {
+      return new Promise((resolve, reject) => {
+         const querySelect = `SELECT * FROM tb_user_detail WHERE user_id <> '${id}'`;
+         db.query(querySelect, (err, data) => {
+            if (!err) {
+               resolve(data);
+            } else {
+               reject(err);
+            }
+         });
+      });
+   },
 };
 
 module.exports = userModel;
