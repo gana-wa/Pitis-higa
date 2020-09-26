@@ -1,4 +1,5 @@
 const db = require('../config/dbConfig');
+const { DateTime } = require('luxon');
 
 const transactionModel = {
    transaction: (body) => {
@@ -80,7 +81,35 @@ const transactionModel = {
          });
       });
    },
-
+   history: (id) => {
+      return new Promise((resolve, reject) => {
+         const startDate = DateTime.local().startOf("week").toISODate();
+         const endDate = DateTime.local().startOf("week").plus({ days: 7 }).toISODate();
+         // console.log(startDate, endDate);
+         const queryHistory = 'SELECT tb_transaction.transaction_id, tb_user_detail.user_id, tb_user_detail.first_name, tb_user_detail.last_name, tb_user_detail.photo, tb_transaction.category, tb_transaction.type, tb_transaction.amount, tb_transaction.date FROM tb_user_detail JOIN tb_transaction ON tb_user_detail.user_id = tb_transaction.receiver_id WHERE tb_transaction.sender_id = ? AND tb_transaction.date BETWEEN ? AND ?;SELECT tb_transaction.transaction_id, tb_user_detail.user_id, tb_user_detail.first_name, tb_user_detail.last_name, tb_user_detail.photo, tb_transaction.category, tb_transaction.type, tb_transaction.amount, tb_transaction.date FROM tb_user_detail RIGHT JOIN tb_transaction ON tb_user_detail.user_id = tb_transaction.sender_id WHERE tb_transaction.receiver_id = ? AND tb_transaction.date BETWEEN ? AND ?;';
+         db.query(queryHistory,
+            [
+               id,
+               startDate,
+               endDate,
+               id,
+               startDate,
+               endDate
+            ], (err, data) => {
+               if (err) {
+                  reject(err);
+                  console.error(err);
+               }
+               const newHistory = [
+                  ...data[0],
+                  ...data[1].map((item) => {
+                     return { ...item, type: 'in' };
+                  }),
+               ];
+               resolve(newHistory);
+            });
+      });
+   },
 };
 
 module.exports = transactionModel;

@@ -22,6 +22,16 @@ const transactionController = {
             formRespone.error(res, err);
          })
    },
+   history: (req, res) => {
+      transactionModel
+         .history(req.params.id)
+         .then((data) => {
+            formRespone.success(res, data);
+         })
+         .catch((err) => {
+            formRespone.error(res, err);
+         })
+   },
 };
 
 module.exports = transactionController
