@@ -101,10 +101,16 @@ const transactionModel = {
                   console.error(err);
                }
                const newHistory = [
-                  ...data[0],
-                  ...data[1].map((item) => {
-                     return { ...item, type: 'in' };
-                  }),
+                  {
+                     section: 'This Week',
+                     historyData: [
+                        ...data[0],
+                        ...data[1].map((item) => {
+                           return { ...item, type: 'in' };
+                        }),
+                     ],
+                  }
+
                ];
                resolve(newHistory);
             });
