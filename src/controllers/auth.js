@@ -21,7 +21,21 @@ const authController = {
          .catch((err) => {
             formRespone.error(res, err);
          })
-   }
+   },
+   updatePin: (req, res) => {
+      authModel
+         .updatePin(req.params.id, req.body)
+         .then((data) => {
+            const responeObj = {
+               msg: 'Successfully updated',
+               ...req.body,
+            }
+            formRespone.success(res, responeObj);
+         })
+         .catch((err) => {
+            formRespone.error(res, err);
+         })
+   },
 };
 
 module.exports = authController;

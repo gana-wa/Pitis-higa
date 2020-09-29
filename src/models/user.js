@@ -16,7 +16,7 @@ const userModel = {
    // select all user except current user
    selectAllUser: (id) => {
       return new Promise((resolve, reject) => {
-         const querySelect = `SELECT * FROM tb_user_detail WHERE user_id <> '${id}'`;
+         const querySelect = `SELECT * FROM tb_user_detail WHERE user_id <> '${id}' AND phone IS NOT NULL`;
          db.query(querySelect, (err, data) => {
             if (!err) {
                resolve(data);

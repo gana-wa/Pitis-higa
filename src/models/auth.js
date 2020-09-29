@@ -23,8 +23,8 @@ const authModel = {
                         reject(err);
                      }
                      const newBody = { ...body, password: hashedPassword };
-                     const queryString = 'INSERT INTO tb_user SET ?;INSERT INTO tb_user_detail SET user_id=LAST_INSERT_ID();INSERT INTO tb_balance SET user_id=LAST_INSERT_ID()';
-                     db.query(queryString, newBody, (err, data) => {
+                     const queryString = 'INSERT INTO tb_user SET ?;INSERT INTO tb_user_detail SET user_id=LAST_INSERT_ID(), first_name = ? ;INSERT INTO tb_balance SET user_id=LAST_INSERT_ID()';
+                     db.query(queryString, [newBody, body.username], (err, dataInsert) => {
                         if (err) {
                            reject(err);
                         } else {
@@ -38,7 +38,7 @@ const authModel = {
                               // { expiresIn: "6h" },
                            );
                            const msg = 'Successfully registered';
-                           const id = data.insertId;
+                           const id = dataInsert[0].insertId;
                            resolve({ msg, username, email, token, id });
                         }
                      });
@@ -59,7 +59,7 @@ const authModel = {
                bcrypt.compare(body.password, data[0].password, (err, result) => {
                   if (result) {
                      const { email } = body;
-                     const { user_id, username, balance, first_name, last_name, phone, photo } = data[0];
+                     const { user_id, username, balance, first_name, last_name, phone, photo, pin } = data[0];
                      const payload = {
                         email,
                         // username,
@@ -81,6 +81,7 @@ const authModel = {
                         phone,
                         photo,
                         token,
+                        pin
                      });
                   }
                   if (!result) {
@@ -92,6 +93,18 @@ const authModel = {
                });
             } else {
                reject({ msg: `This email isn't registered` });
+            }
+         });
+      });
+   },
+   updatePin: (id, body) => {
+      return new Promise((resolve, reject) => {
+         const queryUpdate = `UPDATE tb_user SET ? WHERE user_id ='${id}'`;
+         db.query(queryUpdate, body, (err, data) => {
+            if (!err) {
+               resolve(data);
+            } else {
+               reject(err);
             }
          });
       });
