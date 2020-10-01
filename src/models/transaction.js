@@ -39,6 +39,7 @@ const transactionModel = {
                         resolve({
                            transaction_id: resultData.insertId,
                            ...body,
+                           date: DateTime.local(),
                            amount: Number(body.amount),
                            msg: "Transaction Success"
                         });

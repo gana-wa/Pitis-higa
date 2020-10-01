@@ -26,6 +26,18 @@ const userModel = {
          });
       });
    },
+   fetchBalance: (id) => {
+      return new Promise((resolve, reject) => {
+         const querySelect = `SELECT balance FROM tb_balance WHERE user_id = '${id}'`;
+         db.query(querySelect, (err, data) => {
+            if (!err) {
+               resolve(data);
+            } else {
+               reject(err);
+            }
+         });
+      });
+   },
 };
 
 module.exports = userModel;
