@@ -3,12 +3,22 @@ const db = require('../config/dbConfig');
 const userModel = {
    updateUser: (id, body) => {
       return new Promise((resolve, reject) => {
-         const queryUpdate = `UPDATE tb_user_detail SET ? WHERE tb_user_detail.user_id ='${id}'`;
-         db.query(queryUpdate, body, (err, data) => {
-            if (!err) {
-               resolve(data);
-            } else {
+         const queryCheckPhone = `SELECT phone from tb_user_detail WHERE tb_user_detail.phone = '${body.phone}'`
+         db.query(queryCheckPhone, body.phone, (err, dataPhone) => {
+            if (err) {
                reject(err);
+            }
+            if (dataPhone.length) {
+               reject({ msg: 'This phone number is already registered..!' });
+            } else {
+               const queryUpdate = `UPDATE tb_user_detail SET ? WHERE tb_user_detail.user_id ='${id}'`;
+               db.query(queryUpdate, body, (err, data) => {
+                  if (!err) {
+                     resolve(data);
+                  } else {
+                     reject(err);
+                  }
+               });
             }
          });
       });

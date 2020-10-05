@@ -85,8 +85,8 @@ const transactionModel = {
    history: (id) => {
       return new Promise((resolve, reject) => {
          const startDate = DateTime.local().startOf("week").toISODate();
-         const endDate = DateTime.local().startOf("week").plus({ days: 7 }).toISODate();
-         const queryHistory = 'SELECT tb_transaction.transaction_id, tb_user_detail.user_id, tb_transaction.receiver_id, tb_user_detail.first_name, tb_user_detail.last_name, tb_user_detail.photo, tb_transaction.category, tb_transaction.type, tb_transaction.amount, tb_transaction.date FROM tb_user_detail JOIN tb_transaction ON tb_user_detail.user_id = tb_transaction.receiver_id WHERE tb_transaction.sender_id = ? UNION SELECT tb_transaction.transaction_id, tb_user_detail.user_id, tb_transaction.receiver_id, tb_user_detail.first_name, tb_user_detail.last_name, tb_user_detail.photo, tb_transaction.category, tb_transaction.type, tb_transaction.amount, tb_transaction.date FROM tb_user_detail RIGHT JOIN tb_transaction ON tb_user_detail.user_id = tb_transaction.sender_id WHERE tb_transaction.receiver_id = ?';
+
+         const queryHistory = 'SELECT tb_transaction.transaction_id, tb_user_detail.user_id, tb_transaction.receiver_id, tb_user_detail.first_name, tb_user_detail.last_name, tb_user_detail.photo, tb_transaction.category, tb_transaction.type, tb_transaction.amount, tb_transaction.date FROM tb_user_detail JOIN tb_transaction ON tb_user_detail.user_id = tb_transaction.receiver_id WHERE tb_transaction.sender_id = ? UNION SELECT tb_transaction.transaction_id, tb_user_detail.user_id, tb_transaction.receiver_id, tb_user_detail.first_name, tb_user_detail.last_name, tb_user_detail.photo, tb_transaction.category, tb_transaction.type, tb_transaction.amount, tb_transaction.date FROM tb_user_detail RIGHT JOIN tb_transaction ON tb_user_detail.user_id = tb_transaction.sender_id WHERE tb_transaction.receiver_id = ? ORDER BY transaction_id DESC';
          db.query(queryHistory, [id, id,], (err, data) => {
             if (err) {
                reject(err);
