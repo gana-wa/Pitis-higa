@@ -36,6 +36,30 @@ const authController = {
             formRespone.error(res, err);
          })
    },
+   changePassword: (req, res) => {
+      authModel
+         .changePassword(req.params.id, req.body)
+         .then((data) => {
+            const responeObj = {
+               msg: 'Successfully updated',
+               // ...req.body,
+            }
+            formRespone.success(res, responeObj);
+         })
+         .catch((err) => {
+            formRespone.error(res, err);
+         })
+   },
+   selectEmail: (req, res) => {
+      authModel
+         .selectEmail(req.body)
+         .then((data) => {
+            formRespone.success(res, data);
+         })
+         .catch((err) => {
+            formRespone.error(res, err);
+         })
+   },
 };
 
 module.exports = authController;

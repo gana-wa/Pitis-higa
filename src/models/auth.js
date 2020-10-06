@@ -12,7 +12,7 @@ const authModel = {
                   msg: "This email is already registered"
                })
             } else {
-               const saltRounds = 10
+               const saltRounds = 10;
                bcrypt.genSalt(saltRounds, (err, salt) => {
                   if (err) {
                      reject(err);
@@ -73,7 +73,7 @@ const authModel = {
                      resolve({
                         msg,
                         user_id,
-                        // email,
+                        email,
                         username,
                         balance,
                         first_name,
@@ -107,6 +107,82 @@ const authModel = {
                reject(err);
             }
          });
+      });
+   },
+   selectEmail: (body) => {
+      return new Promise((resolve, reject) => {
+         const querySelect = `SELECT user_id, email FROM tb_user WHERE email = ?`;
+         db.query(querySelect, [body.email], (err, data) => {
+            if (!err) {
+               if (data.length) {
+                  resolve(data[0]);
+               } else {
+                  reject({ msg: 'email not found..!' })
+               }
+            } else {
+               reject(err);
+            }
+         });
+      });
+   },
+   changePassword: (id, body) => {
+      return new Promise((resolve, reject) => {
+         if (body.password !== undefined) {
+            const querySelect = `SELECT password FROM tb_user WHERE user_id = '${id}';`;
+            db.query(querySelect, [id], (err, result) => {
+               if (err) {
+                  reject({ msg: `error select password: ${err}` });
+               }
+               bcrypt.compare(body.password, result[0].password, (err, passwordValid) => {
+                  if (err) {
+                     reject({ msg: `error compare password: ${err}` });
+                  }
+                  if (passwordValid) {
+                     const saltRounds = 10;
+                     bcrypt.genSalt(saltRounds, (err, salt) => {
+                        if (err) {
+                           reject(err);
+                        }
+                        bcrypt.hash(body.newPassword, salt, (err, hashedPassword) => {
+                           if (err) {
+                              reject(err);
+                           }
+                           const queryUpdatePassword = `UPDATE tb_user SET ? WHERE user_id = '${id}';`;
+                           const newBody = { password: hashedPassword };
+                           db.query(queryUpdatePassword, [newBody], (err, res) => {
+                              if (err) {
+                                 reject({ msg: `error update password: ${err}` });
+                              }
+                              resolve({ msg: 'Password successful changed' });
+                           });
+                        });
+                     });
+                  } else {
+                     reject({ msg: 'Current Password is Wrong..!' });
+                  }
+               });
+            });
+         } else {
+            const saltRounds = 10;
+            bcrypt.genSalt(saltRounds, (err, salt) => {
+               if (err) {
+                  reject(err);
+               }
+               bcrypt.hash(body.newPassword, salt, (err, hashedPassword) => {
+                  if (err) {
+                     reject(err);
+                  }
+                  const queryUpdatePassword = `UPDATE tb_user SET ? WHERE user_id = '${id}';`;
+                  const newBody = { password: hashedPassword };
+                  db.query(queryUpdatePassword, [newBody], (err, res) => {
+                     if (err) {
+                        reject({ msg: `error reset password: ${err}` });
+                     }
+                     resolve({ msg: 'Password successfully reset' });
+                  });
+               });
+            });
+         }
       });
    },
 };
