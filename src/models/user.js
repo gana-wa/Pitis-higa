@@ -36,6 +36,18 @@ const userModel = {
          });
       });
    },
+   searchUser: (query) => {
+      return new Promise((resolve, reject) => {
+         const querySelect = `SELECT * FROM tb_user_detail WHERE first_name LIKE '%${query.first_name}%' AND user_id <> '${query.user_id}' AND phone IS NOT NULL`;
+         db.query(querySelect, (err, data) => {
+            if (!err) {
+               resolve(data);
+            } else {
+               reject(err);
+            }
+         });
+      });
+   },
    fetchBalance: (id) => {
       return new Promise((resolve, reject) => {
          const querySelect = `SELECT balance FROM tb_balance WHERE user_id = '${id}'`;
