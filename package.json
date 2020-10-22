@@ -21,7 +21,8 @@
     "luxon": "^1.25.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

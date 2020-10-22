@@ -11,7 +11,7 @@ const transactionModel = {
                console.error(err);
             }
             // decrease balance of sender
-            const queryBalance = 'SELECT balance from tb_balance WHERE user_id=?;';
+            const queryBalance = 'SELECT username, balance from tb_user JOIN tb_balance ON tb_user.user_id=tb_balance.user_id WHERE tb_balance.user_id=?;';
             db.query(queryBalance, [body.sender_id], (err, dataSender) => {
                if (err) {
                   reject({ msg: `Transaction failed. error: select balance(${err})` });
@@ -38,6 +38,7 @@ const transactionModel = {
                         }
                         resolve({
                            transaction_id: resultData.insertId,
+                           sender_name: dataSender[0].username,
                            ...body,
                            date: DateTime.local(),
                            amount: Number(body.amount),
