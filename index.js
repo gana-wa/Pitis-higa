@@ -31,5 +31,5 @@ io.on('connection', (socket) => {
 });
 
 http.listen(process.env.SOCKET_PORT, () => {
-   console.log(`Listening on port :${process.env.SOCKET_PORT}`);
+   console.log(`Socket is listening at port ${process.env.SOCKET_PORT}`);
 });

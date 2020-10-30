@@ -185,6 +185,21 @@ const authModel = {
          }
       });
    },
+   sendEmail: (body) => {
+      const querySelect = 'SELECT user_id, email FROM tb_user WHERE email=?';
+      return new Promise((resolve, reject) => {
+         db.query(querySelect, [body.email], (err, resData) => {
+            if (err) {
+               reject(err);
+            }
+            if (resData.length) {
+               let otp = parseInt(Math.random() * 10000);
+               console.log(otp);
+               resolve({ email: resData[0].email, otp: otp });
+            }
+         });
+      });
+   },
 };
 
 module.exports = authModel;

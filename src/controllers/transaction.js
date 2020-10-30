@@ -26,11 +26,7 @@ const transactionController = {
             const { receiver_id, amount, category } = data;
             const title = `${category} Success`;
             const message = `Yeay, you got ${amount.toLocaleString('id-ID')} from top-up!`;
-            try {
-               io.to(receiver_id).emit("transaction", { title, message });
-            } catch (err) {
-               console.log(err);
-            }
+            io.to(receiver_id).emit("transaction", { title, message });
             formRespone.success(res, data);
          })
          .catch((err) => {
