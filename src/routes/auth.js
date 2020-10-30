@@ -6,6 +6,6 @@ authRouter.post('/login', authController.login);
 authRouter.patch('/pin/:id', authController.updatePin);
 authRouter.patch('/password/:id', authController.changePassword);
 authRouter.post('/email', authController.selectEmail);
-authRouter.post('/sendemail', authController.sendEmail);
+authRouter.post('/sendotp', authController.sendOtpEmail);
 
 module.exports = authRouter;

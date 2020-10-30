@@ -61,9 +61,9 @@ const authController = {
             formRespone.error(res, err);
          })
    },
-   sendEmail: (req, res) => {
+   sendOtpEmail: (req, res) => {
       authModel
-         .sendEmail(req.body)
+         .sendOtpEmail(req.body)
          .then((data) => {
             const transporter = nodemailer.createTransport({
                service: "gmail",
